@@ -98,12 +98,14 @@ Every solution is accompanied by an analysis of invariants, edge cases, and algo
 
 ## 🏆 Milestones
 
+<!-- AUTOMATION_MILESTONES_START -->
 - [ ] **10 Solved**: Initial laboratory baseline & environment validation
 - [ ] **50 Solved**: Solidified mastery of linear data structures & pointer patterns
 - [ ] **100 Solved**: Fluency in Trees, Binary Search, and standard BFS/DFS
 - [ ] **250 Solved**: Comprehensive command of Dynamic Programming & Graph Theory
 - [ ] **500 Solved**: Advanced multi-pattern synthesis & edge-case intuition
 - [ ] **1000 Solved**: Complete algorithmic mastery & high-speed competitive readiness
+<!-- AUTOMATION_MILESTONES_END -->
 
 ---
 

@@ -7,6 +7,13 @@ from .validator import SubmissionPayload, ValidationError, validate_submission
 from .ledger_updater import DelimiterError, extract_delimited_block, replace_delimited_block, update_file_delimited_block
 from .problem_manager import ImportResult, ProblemManager, SolutionConflictError
 from .index_linker import IndexLinker
+from .statistics import (
+    ProblemMetadata,
+    RepositoryStats,
+    RepositoryScanner,
+    DashboardRenderer,
+    DashboardUpdater,
+)
 
 __all__ = [
     "SubmissionPayload",
@@ -20,4 +27,9 @@ __all__ = [
     "ProblemManager",
     "SolutionConflictError",
     "IndexLinker",
+    "ProblemMetadata",
+    "RepositoryStats",
+    "RepositoryScanner",
+    "DashboardRenderer",
+    "DashboardUpdater",
 ]

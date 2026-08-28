@@ -30,6 +30,7 @@ status: "Mastered"
 
 ## 📊 Category Telemetry
 
+<!-- AUTOMATION_CATEGORY_TELEMETRY_START -->
 | Category | Solved | Target | Easy | Medium | Hard | Progress |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Arrays & Strings** | 0 | 35 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
@@ -40,6 +41,7 @@ status: "Mastered"
 | **Graphs & Disjoint Sets** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Dynamic Programming** | 0 | 35 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Backtracking & Greedy** | 0 | 20 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
+<!-- AUTOMATION_CATEGORY_TELEMETRY_END -->
 
 ---
 

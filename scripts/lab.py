@@ -17,6 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.engine.validator import SubmissionPayload, ValidationError, validate_submission
 from scripts.engine.problem_manager import ProblemManager, SolutionConflictError, DelimiterError
+from scripts.engine.statistics import RepositoryScanner, DashboardUpdater
 
 
 def load_payload_from_args(args: argparse.Namespace) -> Dict[str, Any]:
@@ -107,6 +108,7 @@ def cmd_import(args: argparse.Namespace) -> None:
             else:
                 print(f"     + Co-locate new language solution.{payload.extension}")
             print(f"     + Update problem README.md (preserve manual notes)")
+        print(f"     + Recalculate repository statistics and update README.md / PROGRESS.md")
         return
 
     try:
@@ -116,12 +118,46 @@ def cmd_import(args: argparse.Namespace) -> None:
         for act in res.actions:
             print(f"   • Action:    {act}")
         print(f"   • Languages: {', '.join(res.languages)}")
+
+        # Automatically update repository dashboards and ledgers
+        updater = DashboardUpdater(PROJECT_ROOT)
+        r_changed, p_changed, stats = updater.update_all()
+        if r_changed:
+            print("   • Updated:   README.md (Metrics, Recent Solves, Milestones)")
+        if p_changed:
+            print("   • Updated:   PROGRESS.md (Category Telemetry, Master Log)")
+
     except SolutionConflictError as e:
         print(f"⚠️ Conflict Error: {e}", file=sys.stderr)
         sys.exit(1)
     except DelimiterError as e:
         print(f"❌ Delimiter Error: {e}", file=sys.stderr)
         sys.exit(1)
+
+
+def cmd_stats(args: argparse.Namespace) -> None:
+    """Displays real repository statistics calculated from problems/."""
+    scanner = RepositoryScanner(PROJECT_ROOT)
+    stats = scanner.scan()
+
+    print("⚡ LeetCode Lab Statistics")
+    print("───────────────────────────────")
+    print(f"Total Solved : {stats.total_solved}")
+    print(f"🟢 Easy      : {stats.easy_count}")
+    print(f"🟡 Medium    : {stats.medium_count}")
+    print(f"🔴 Hard      : {stats.hard_count}")
+    print("\n💻 Languages:")
+    if stats.language_counts:
+        for lang, count in stats.language_counts.items():
+            print(f"  • {lang:12}: {count}")
+    else:
+        print("  None yet")
+
+    print("\n🏆 Milestones:")
+    for milestone, reached in stats.milestones.items():
+        symbol = "●" if reached else "○"
+        status = "Completed" if reached else "Upcoming"
+        print(f"  {milestone:4d} {symbol} ({status})")
 
 
 def cmd_test(args: argparse.Namespace) -> None:
@@ -160,6 +196,9 @@ def main() -> None:
     p_import.add_argument("--no-commit", action="store_true", help="Skip Git commit")
     p_import.add_argument("--no-push", action="store_true", help="Skip Git push")
 
+    # stats
+    p_stats = subparsers.add_parser("stats", help="Display aggregated repository statistics")
+
     # test
     p_test = subparsers.add_parser("test", help="Run automated test suite")
     p_test.add_argument("-v", "--verbose", action="store_true", help="Verbose test output")
@@ -178,6 +217,8 @@ def main() -> None:
         cmd_validate(args)
     elif args.command == "import":
         cmd_import(args)
+    elif args.command == "stats":
+        cmd_stats(args)
     elif args.command == "test":
         cmd_test(args)
     elif args.command == "listen":
