@@ -50,7 +50,7 @@ status: "Mastered"
 <!-- AUTOMATION_PROBLEM_LOG_START -->
 | # | Problem Title | Difficulty | Primary Pattern | Data Structure | Time | Space | Canonical Solution | Review Status |
 | :-: | :--- | :---: | :--- | :--- | :-: | :-: | :---: | :---: |
-| — | *Awaiting first solve* | — | — | — | — | — | — | — |
+| 0009 | Palindrome Number | 🟢 Easy | — | Math | O(N) | O(1) | [`problems/easy/0009-palindrome-number/`](problems/easy/0009-palindrome-number/) | Solved |
 <!-- AUTOMATION_PROBLEM_LOG_END -->
 
 ---

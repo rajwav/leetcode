@@ -1,6 +1,6 @@
 """
 LeetCode Lab Engine package.
-Provides schema validation, problem storage, ledger updates, and indexing.
+Provides schema validation, problem storage, ledger updates, indexing, and Git management.
 """
 
 from .validator import SubmissionPayload, ValidationError, validate_submission
@@ -14,6 +14,7 @@ from .statistics import (
     DashboardRenderer,
     DashboardUpdater,
 )
+from .git_manager import GitManager, GitSafetyError
 
 __all__ = [
     "SubmissionPayload",
@@ -32,4 +33,6 @@ __all__ = [
     "RepositoryScanner",
     "DashboardRenderer",
     "DashboardUpdater",
+    "GitManager",
+    "GitSafetyError",
 ]

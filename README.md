@@ -11,8 +11,8 @@ An archive of data structures and algorithms built from first principles. This r
 <!-- AUTOMATION_METRICS_START -->
 | Metric | Solved | Distribution | Progress |
 | :--- | :---: | :--- | :--- |
-| **Total Solved** | **0** | `0 Easy` · `0 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 0% |
-| 🟢 **Easy** | 0 | Foundational primitives & implementation | `░░░░░░░░░░░░░░░░░░░░` 0% |
+| **Total Solved** | **1** | `1 Easy` · `0 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 0% |
+| 🟢 **Easy** | 1 | Foundational primitives & implementation | `░░░░░░░░░░░░░░░░░░░░` 1% |
 | 🟡 **Medium** | 0 | Core patterns, graphs & dynamic programming | `░░░░░░░░░░░░░░░░░░░░` 0% |
 | 🔴 **Hard** | 0 | Complex optimization & multi-pattern synthesis | `░░░░░░░░░░░░░░░░░░░░` 0% |
 
@@ -22,7 +22,7 @@ An archive of data structures and algorithms built from first principles. This r
 | :--- | :---: | :--- |
 | **Current Streak** | `0 days` | Consistent daily problem-solving cycle |
 | **Longest Streak** | `0 days` | Peak deliberate practice consistency |
-| **Primary Languages** | `Python` · `C++` · `Java` | Standard technical interview & contest toolchains |
+| **Primary Languages** | `C++ (1)` | Standard technical interview & contest toolchains |
 | **Active Objective** | `Phase 1` | Core linear structures & two-pointer mechanics |
 <!-- AUTOMATION_METRICS_END -->
 
@@ -81,7 +81,7 @@ The laboratory follows a systematic 4-phase progression:
 <!-- AUTOMATION_RECENT_SOLVES_START -->
 | # | Problem | Difficulty | Category / Pattern | Solution | Date |
 | :-: | :--- | :---: | :--- | :---: | :---: |
-| — | *No problems logged yet* | — | *Laboratory initialized* | — | — |
+| 9 | [Palindrome Number](problems/easy/0009-palindrome-number/) | 🟢 Easy | Math | [`C++`](problems/easy/0009-palindrome-number/) | 2026-08-28 |
 <!-- AUTOMATION_RECENT_SOLVES_END -->
 
 ---

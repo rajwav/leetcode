@@ -120,7 +120,7 @@ class ProblemManager:
         # Apply disk changes if not dry_run
         if not dry_run:
             target_dir.mkdir(parents=True, exist_ok=True)
-            if not solution_file.exists() or solution_file.read_text(encoding="utf-8").strip() == payload.code.strip():
+            if not solution_file.exists():
                 solution_file.write_text(payload.code.strip() + "\n", encoding="utf-8")
             readme_file.write_text(updated_readme_content, encoding="utf-8")
 

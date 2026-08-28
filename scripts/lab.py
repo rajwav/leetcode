@@ -18,6 +18,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from scripts.engine.validator import SubmissionPayload, ValidationError, validate_submission
 from scripts.engine.problem_manager import ProblemManager, SolutionConflictError, DelimiterError
 from scripts.engine.statistics import RepositoryScanner, DashboardUpdater
+from scripts.engine.git_manager import GitManager, GitSafetyError
 
 
 def load_payload_from_args(args: argparse.Namespace) -> Dict[str, Any]:
@@ -109,6 +110,10 @@ def cmd_import(args: argparse.Namespace) -> None:
                 print(f"     + Co-locate new language solution.{payload.extension}")
             print(f"     + Update problem README.md (preserve manual notes)")
         print(f"     + Recalculate repository statistics and update README.md / PROGRESS.md")
+        if not args.no_commit:
+            print(f"     + Stage {payload.canonical_relative_path}, README.md, PROGRESS.md and commit")
+            if args.push:
+                print(f"     + Push commit to origin/main")
         return
 
     try:
@@ -127,11 +132,27 @@ def cmd_import(args: argparse.Namespace) -> None:
         if p_changed:
             print("   • Updated:   PROGRESS.md (Category Telemetry, Master Log)")
 
+        # Git operations
+        if not args.no_commit:
+            git_mgr = GitManager(PROJECT_ROOT)
+            if git_mgr.is_git_repo():
+                git_mgr.stage_submission(payload)
+                commit_msg = git_mgr.format_commit_message(payload, res)
+                committed = git_mgr.commit(commit_msg)
+                if committed:
+                    print(f"   • Git Commit: {commit_msg}")
+                    if args.push:
+                        git_mgr.push()
+                        print("   • Git Push:   Pushed to origin/main")
+
     except SolutionConflictError as e:
         print(f"⚠️ Conflict Error: {e}", file=sys.stderr)
         sys.exit(1)
     except DelimiterError as e:
         print(f"❌ Delimiter Error: {e}", file=sys.stderr)
+        sys.exit(1)
+    except GitSafetyError as e:
+        print(f"❌ Git Safety Error: {e}", file=sys.stderr)
         sys.exit(1)
 
 
@@ -172,8 +193,34 @@ def cmd_test(args: argparse.Namespace) -> None:
 
 
 def cmd_listen(args: argparse.Namespace) -> None:
-    """Starts localhost ingestion server (Phase 6)."""
-    print("ℹ️ Localhost ingestion server will be initialized in Phase 6.")
+    """Starts localhost ingestion HTTP server."""
+    from scripts.server import run_server
+
+    port = args.port
+    host = "127.0.0.1"
+    server = run_server(
+        host=host,
+        port=port,
+        repo_root=PROJECT_ROOT,
+        auto_commit=not args.no_commit,
+        auto_push=args.push,
+    )
+    print("⚡ LeetCode Lab Ingestion Server")
+    print("───────────────────────────────")
+    print(f"Listening on : http://{host}:{port}")
+    print(f"Endpoint     : POST /ingest")
+    print(f"Allowed Site : https://leetcode.com")
+    print(f"Repository   : {PROJECT_ROOT}")
+    print(f"Auto-Commit  : {'Enabled' if not args.no_commit else 'Disabled'}")
+    print(f"Auto-Push    : {'Enabled (origin/main)' if args.push else 'Disabled (local commit only)'}")
+    print("Press Ctrl+C to stop.\n")
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        print("\n🛑 Stopping server...")
+        server.shutdown()
+        server.server_close()
+        print("✅ Server stopped gracefully.")
 
 
 def main() -> None:
@@ -194,7 +241,7 @@ def main() -> None:
     p_import.add_argument("--json", "-j", dest="json_str", help="Raw JSON payload string")
     p_import.add_argument("--dry-run", action="store_true", help="Simulate import without modifying files")
     p_import.add_argument("--no-commit", action="store_true", help="Skip Git commit")
-    p_import.add_argument("--no-push", action="store_true", help="Skip Git push")
+    p_import.add_argument("--push", action="store_true", help="Push commit to origin/main")
 
     # stats
     p_stats = subparsers.add_parser("stats", help="Display aggregated repository statistics")
@@ -206,6 +253,8 @@ def main() -> None:
     # listen
     p_listen = subparsers.add_parser("listen", help="Start local ingestion HTTP server")
     p_listen.add_argument("--port", type=int, default=8765, help="Port to listen on (default: 8765)")
+    p_listen.add_argument("--no-commit", action="store_true", help="Disable automatic Git commits on ingest")
+    p_listen.add_argument("--push", action="store_true", help="Automatically push commits to remote")
 
     args = parser.parse_args()
 
