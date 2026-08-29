@@ -9,10 +9,10 @@ languages:
 leetcode_tags:
   - "Math"
 primary_pattern: ""
-solved_at: "2026-08-28"
-submission_id: "2123228302"
+solved_at: "2026-08-29"
+submission_id: "2123649618"
 runtime: "0 ms"
-memory: "8.6 MB"
+memory: "8.5 MB"
 ---
 
 # 0009 — Palindrome Number
@@ -26,7 +26,7 @@ memory: "8.6 MB"
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
 - **Runtime**: 0 ms
-- **Memory**: 8.6 MB
+- **Memory**: 8.5 MB
 - **Tags**: Math
 <!-- AUTOMATION_STATS_END -->
 
