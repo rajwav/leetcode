@@ -268,5 +268,103 @@ class TestGitManager(unittest.TestCase):
             self.git_mgr.validate_paths_for_staging(["problems/easy/0001/credentials.json"])
 
 
+class TestGitManagerPushIntegration(unittest.TestCase):
+    """Integration tests for push() using a local bare repository as the remote.
+
+    A bare repo is used as 'origin' so tests run without any network
+    access and without touching the real GitHub repository.
+    """
+
+    def setUp(self):
+        # Create the bare "remote" repository
+        self.bare_dir_obj = tempfile.TemporaryDirectory()
+        self.bare_repo = Path(self.bare_dir_obj.name).resolve() / "remote.git"
+        subprocess.run(["git", "init", "--bare", "-b", "main", str(self.bare_repo)],
+                       check=True, capture_output=True)
+
+        # Create the local working repository
+        self.local_dir_obj = tempfile.TemporaryDirectory()
+        self.local_repo = Path(self.local_dir_obj.name).resolve()
+        subprocess.run(["git", "init", "-b", "main"], cwd=self.local_repo,
+                       check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.name", "Test"], cwd=self.local_repo,
+                       check=True, capture_output=True)
+        subprocess.run(["git", "config", "user.email", "t@t.com"], cwd=self.local_repo,
+                       check=True, capture_output=True)
+        subprocess.run(["git", "remote", "add", "origin", str(self.bare_repo)],
+                       cwd=self.local_repo, check=True, capture_output=True)
+
+        # Create required directory structure
+        (self.local_repo / "problems" / "easy").mkdir(parents=True)
+        (self.local_repo / "README.md").write_text("# Test\n", encoding="utf-8")
+        (self.local_repo / "PROGRESS.md").write_text("# Progress\n", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=self.local_repo, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", "chore: init"], cwd=self.local_repo,
+                       check=True, capture_output=True)
+        # Push initial commit so remote has 'main'
+        subprocess.run(["git", "push", "origin", "main"], cwd=self.local_repo,
+                       check=True, capture_output=True)
+
+        self.git_mgr = GitManager(self.local_repo)
+
+    def tearDown(self):
+        self.bare_dir_obj.cleanup()
+        self.local_dir_obj.cleanup()
+
+    def _make_and_commit_problem(self, problem_dir_name: str = "0001-two-sum") -> None:
+        """Helper: create a problem dir and commit it so there's something to push."""
+        prob_dir = self.local_repo / "problems" / "easy" / problem_dir_name
+        prob_dir.mkdir(parents=True, exist_ok=True)
+        (prob_dir / "solution.cpp").write_text("class Solution {};\n", encoding="utf-8")
+        (prob_dir / "README.md").write_text(f"# {problem_dir_name}\n", encoding="utf-8")
+        subprocess.run(["git", "add", "."], cwd=self.local_repo, check=True, capture_output=True)
+        subprocess.run(["git", "commit", "-m", f"feat: add {problem_dir_name}"],
+                       cwd=self.local_repo, check=True, capture_output=True)
+
+    # 18. Successful push to a real bare remote
+    def test_push_succeeds_to_local_bare_remote(self):
+        self._make_and_commit_problem()
+        # Should push without raising
+        result = self.git_mgr.push(remote="origin", branch="main")
+        self.assertTrue(result)
+
+        # Verify commit arrived in bare repo
+        log_res = subprocess.run(
+            ["git", "log", "--oneline", "-1"],
+            cwd=self.local_repo, capture_output=True, text=True
+        )
+        self.assertIn("0001-two-sum", log_res.stdout)
+
+    # 19. Push is refused when remote has diverged
+    def test_push_refused_on_diverged_remote(self):
+        """Simulates a diverged remote by pushing a commit directly to the bare repo
+        from a second clone, then trying to push from the first clone without pulling."""
+        # Create a second clone and push a diverging commit to origin
+        second_dir_obj = tempfile.TemporaryDirectory()
+        second_repo = Path(second_dir_obj.name).resolve()
+        try:
+            subprocess.run(["git", "clone", str(self.bare_repo), str(second_repo)],
+                           check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.name", "Other"], cwd=second_repo,
+                           check=True, capture_output=True)
+            subprocess.run(["git", "config", "user.email", "o@o.com"], cwd=second_repo,
+                           check=True, capture_output=True)
+            (second_repo / "README.md").write_text("# Diverged\n", encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=second_repo, check=True, capture_output=True)
+            subprocess.run(["git", "commit", "-m", "diverge: from second clone"],
+                           cwd=second_repo, check=True, capture_output=True)
+            subprocess.run(["git", "push", "origin", "main"], cwd=second_repo,
+                           check=True, capture_output=True)
+        finally:
+            second_dir_obj.cleanup()
+
+        # Now local repo has NOT pulled. Push must be refused.
+        self._make_and_commit_problem()
+        with self.assertRaises(GitSafetyError) as ctx:
+            self.git_mgr.push(remote="origin", branch="main")
+        self.assertIn("not in local", str(ctx.exception),
+                      "GitSafetyError should explain the divergence")
+
+
 if __name__ == "__main__":
     unittest.main()

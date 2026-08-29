@@ -7,8 +7,10 @@ submissions from the browser userscript and routing them to the core Python engi
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 import logging
+import os
 from pathlib import Path
 import shutil
+import signal
 import sys
 import tempfile
 import threading
@@ -34,6 +36,32 @@ logger = logging.getLogger("leetcode_lab_server")
 # Process-level lock: ensures only one ingest runs at a time.
 # Prevents race conditions on the working tree and git operations.
 _INGEST_LOCK = threading.Lock()
+
+
+def configure_logging() -> None:
+    """Configure structured logging for both interactive and launchd (file) operation.
+
+    When running under launchd, stdout/stderr are redirected to log files.
+    This sets up clean timestamped output that is readable in both terminal
+    and log file contexts.
+    """
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
+        stream=sys.stdout,
+        force=True,
+    )
+
+
+def log_startup(host: str, port: int, repo_root: Path, auto_push: bool) -> None:
+    """Emit a structured startup banner to stdout (captured by launchd logs)."""
+    print(f"[INFO] LeetCode Lab server starting", flush=True)
+    print(f"[INFO] PID          : {os.getpid()}", flush=True)
+    print(f"[INFO] Endpoint     : http://{host}:{port}/ingest", flush=True)
+    print(f"[INFO] Repository   : {repo_root}", flush=True)
+    print(f"[INFO] Auto-Push    : {'enabled (origin/main)' if auto_push else 'disabled'}", flush=True)
+    print(f"[INFO] Press Ctrl+C to stop (or launchctl bootout to unload)", flush=True)
 
 
 class IngestionRequestHandler(BaseHTTPRequestHandler):
@@ -203,6 +231,8 @@ class IngestionRequestHandler(BaseHTTPRequestHandler):
         if progress_file.exists():
             progress_backup = progress_file.read_text(encoding="utf-8")
 
+        has_committed = False
+
         try:
             manager = ProblemManager(self.repo_root)
             result = manager.import_submission(payload, dry_run=False)
@@ -217,6 +247,8 @@ class IngestionRequestHandler(BaseHTTPRequestHandler):
                     git_mgr.stage_submission(payload)
                     commit_msg = git_mgr.format_commit_message(payload, result)
                     committed = git_mgr.commit(commit_msg)
+                    if committed:
+                        has_committed = True
                     if committed and self.auto_push:
                         git_mgr.push()
 
@@ -244,14 +276,17 @@ class IngestionRequestHandler(BaseHTTPRequestHandler):
             self._send_json_response(409, {"ok": False, "error": str(e)}, origin=origin)
 
         except (DelimiterError, GitSafetyError, Exception) as e:
-            # Restore dashboard files to pre-ingest state
-            try:
-                if readme_backup is not None:
-                    readme_file.write_text(readme_backup, encoding="utf-8")
-                if progress_backup is not None:
-                    progress_file.write_text(progress_backup, encoding="utf-8")
-            except Exception as restore_err:
-                logger.error("Failed to restore dashboard backups after error: %s", restore_err)
+            # Restore dashboard files to pre-ingest state ONLY if we haven't committed yet.
+            # If the commit succeeded but a later step (like push) failed, the commit must
+            # remain intact and the working tree must match the commit.
+            if not has_committed:
+                try:
+                    if readme_backup is not None:
+                        readme_file.write_text(readme_backup, encoding="utf-8")
+                    if progress_backup is not None:
+                        progress_file.write_text(progress_backup, encoding="utf-8")
+                except Exception as restore_err:
+                    logger.error("Failed to restore dashboard backups after error: %s", restore_err)
 
             if isinstance(e, DelimiterError):
                 self._send_json_response(500, {"ok": False, "error": f"Delimiter error in repository docs: {str(e)}"}, origin=origin)

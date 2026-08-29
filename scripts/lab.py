@@ -6,6 +6,7 @@ Master command-line interface for the LeetCode DSA laboratory.
 
 import argparse
 import json
+import signal
 import sys
 from pathlib import Path
 from typing import Any, Dict
@@ -193,34 +194,73 @@ def cmd_test(args: argparse.Namespace) -> None:
 
 
 def cmd_listen(args: argparse.Namespace) -> None:
-    """Starts localhost ingestion HTTP server."""
-    from scripts.server import run_server
+    """Starts localhost ingestion HTTP server.
+
+    Designed to run correctly both interactively (Terminal) and as a
+    launchd background agent. Uses structured log output compatible with
+    launchd's StandardOutPath/StandardErrorPath log files.
+    """
+    import socket
+    from scripts.server import run_server, configure_logging, log_startup
+
+    configure_logging()
 
     port = args.port
     host = "127.0.0.1"
-    server = run_server(
-        host=host,
-        port=port,
-        repo_root=PROJECT_ROOT,
-        auto_commit=not args.no_commit,
-        auto_push=args.push,
-    )
-    print("⚡ LeetCode Lab Ingestion Server")
-    print("───────────────────────────────")
-    print(f"Listening on : http://{host}:{port}")
-    print(f"Endpoint     : POST /ingest")
-    print(f"Allowed Site : https://leetcode.com")
-    print(f"Repository   : {PROJECT_ROOT}")
-    print(f"Auto-Commit  : {'Enabled' if not args.no_commit else 'Disabled'}")
-    print(f"Auto-Push    : {'Enabled (origin/main)' if args.push else 'Disabled (local commit only)'}")
-    print("Press Ctrl+C to stop.\n")
+
+    # Build server (bind to port) before setting up signal handlers
+    try:
+        server = run_server(
+            host=host,
+            port=port,
+            repo_root=PROJECT_ROOT,
+            auto_commit=not args.no_commit,
+            auto_push=args.push,
+        )
+    except OSError as e:
+        if e.errno == 48 or "Address already in use" in str(e):
+            print(
+                f"[ERROR] Port {port} is already in use. "
+                f"Another LeetCode Lab server may be running.",
+                file=sys.stderr,
+                flush=True,
+            )
+            print(
+                f"[ERROR] Check: lsof -i :{port}",
+                file=sys.stderr,
+                flush=True,
+            )
+            print(
+                f"[ERROR] Status: ./scripts/status_launchd.sh",
+                file=sys.stderr,
+                flush=True,
+            )
+            sys.exit(1)
+        raise
+
+    # Register SIGTERM handler for clean launchd shutdown.
+    # launchd sends SIGTERM before SIGKILL when stopping the agent.
+    # We MUST call server.shutdown() in a separate thread. If called from the
+    # signal handler (which runs in the main thread), it will deadlock waiting
+    # for serve_forever() to terminate, which it cannot do because the main
+    # thread is blocked in the signal handler.
+    def _handle_sigterm(signum: int, frame: object) -> None:
+        print("[INFO] Received SIGTERM — shutting down gracefully.", flush=True)
+        import threading
+        threading.Thread(target=server.shutdown, daemon=True).start()
+
+    signal.signal(signal.SIGTERM, _handle_sigterm)
+
+    log_startup(host, port, PROJECT_ROOT, args.push)
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\n🛑 Stopping server...")
+        print("\n[INFO] Keyboard interrupt received — shutting down.", flush=True)
+    finally:
         server.shutdown()
         server.server_close()
-        print("✅ Server stopped gracefully.")
+        print("[INFO] Server stopped.", flush=True)
 
 
 def main() -> None:

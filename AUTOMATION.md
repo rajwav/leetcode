@@ -1,207 +1,210 @@
-# 🤖 LeetCode → GitHub Automation Specification
+# LeetCode Lab — Automation Guide
 
-This document defines the architectural specification, data flow, directory conventions, and update mechanisms for the automated LeetCode synchronization pipeline.
-
----
-
-## 🏛️ 1. Core Architecture & Storage Philosophy
-
-The repository enforces a **Single Source of Truth (SSOT)** model to avoid redundant copies of code:
-
-```text
-                                  ┌───────────────────────────────┐
-                                  │      LeetCode Submission      │
-                                  └───────────────┬───────────────┘
-                                                  │
-                                                  ▼
-                                ┌───────────────────────────────────┐
-                                │     Canonical Solution Store      │
-                                │   problems/{easy,medium,hard}/    │
-                                └─────────┬───────────────┬─────────┘
-                                          │               │
-                 ┌────────────────────────┼───────────────┼────────────────────────┐
-                 ▼                        ▼               ▼                        ▼
-       ┌──────────────────┐     ┌──────────────────┐  ┌──────────────┐    ┌─────────────────┐
-       │     README.md    │     │   PROGRESS.md    │  │  patterns/   │    │ data-structures/│
-       │ (Metrics/Recent) │     │ (Master Ledger)  │  │   (Guides)   │    │    (Guides)     │
-       └──────────────────┘     └──────────────────┘  └──────────────┘    └─────────────────┘
-```
-
-### Directory Roles
-
-| Directory | Role | Solution Code Permitted? | Description |
-| :--- | :--- | :---: | :--- |
-| `problems/easy/`<br>`problems/medium/`<br>`problems/hard/` | **Canonical Store** | **YES (Sole Location)** | Holds problem directories containing raw source code (`solution.py`, `solution.cpp`, etc.) and the problem's dedicated `README.md`. |
-| `patterns/` | **Pattern Guides & Index** | **NO** | Deep-dive guides, invariant blueprints, and indexed links to canonical solutions. |
-| `data-structures/` | **Data Structure Guides & Index**| **NO** | Core implementations, complexity references, and indexed links to canonical solutions. |
-| `algorithms/` | **Algorithm Guides & Index** | **NO** | Algorithm domain summaries (Sorting, DP, Greedy, Graph) and topic indexes. |
-| `daily/` | **Chronological Logs** | **NO** | Yearly/monthly challenge calendars and daily practice references. |
+> **One-time setup. Then you only solve LeetCode.**
 
 ---
 
-## 📁 2. Canonical Problem Directory Structure
+## Architecture
 
-Every solved problem is stored under its respective difficulty tier with a normalized, 4-digit zero-padded folder naming convention:
-
-```text
-problems/
-└── medium/
-    └── 0003-longest-substring-without-repeating-characters/
-        ├── README.md         # Problem writeup, metadata, and intuition analysis
-        ├── solution.py       # Primary implementation
-        └── solution.cpp      # (Optional) Secondary language implementation
 ```
-
-### Canonical Problem `README.md` Template
-
-Each problem's `README.md` contains a machine-readable YAML/HTML frontmatter block followed by manual/automated writeup sections:
-
-```markdown
-<!--
-id: 3
-title: "Longest Substring Without Repeating Characters"
-difficulty: "Medium"
-url: "https://leetcode.com/problems/longest-substring-without-repeating-characters/"
-languages: ["Python", "C++"]
-primary_pattern: "Sliding Window"
-data_structures: ["Hash Table", "String"]
-algorithms: ["Two Pointers"]
-time_complexity: "O(N)"
-space_complexity: "O(min(N, M))"
-date_solved: "2026-08-28"
-status: "Mastered"
--->
-
-# 3. Longest Substring Without Repeating Characters
-
-- **Difficulty**: Medium
-- **URL**: [LeetCode #3](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
-- **Patterns**: Sliding Window, Hash Table
-- **Time Complexity**: $O(N)$
-- **Space Complexity**: $O(\min(N, M))$
-
-<!-- AUTOMATION_PROBLEM_BODY_START -->
-## Problem Statement
-[Problem description text and constraints]
-<!-- AUTOMATION_PROBLEM_BODY_END -->
-
-## 💡 Engineering Intuition & Invariant
-[Manual explanation of the invariant, why the sliding window works, and how duplicate indices are skipped]
-
-## 🧪 Complexity Analysis
-- **Time**: $O(N)$ because the right pointer traverses the string once and left pointer moves monotonically.
-- **Space**: $O(\min(N, M))$ where $M$ is alphabet charset size.
+macOS Login
+    ↓
+launchd (com.rajwav.leetcode-lab)
+    ↓  auto-restarts on crash, 10s throttle
+python3 scripts/lab.py listen --push
+    ↓  binds 127.0.0.1:8765 only
+    ↓  logs → ~/Library/Logs/LeetCodeLab/
+    │
+LeetCode → Submit → Accepted
+    ↓
+Tampermonkey userscript v1.2.0
+    ↓  hooks fetch + XHR in page Main World
+POST http://127.0.0.1:8765/ingest
+    ↓  origin check · size limit · JSON validation
+validate_submission()
+    ↓  slug safety · language normalization · status check
+ProblemManager.import_submission()
+    ↓  idempotent write · non-destructive README
+DashboardUpdater.update_all()
+    ↓  delimiter-bounded README.md + PROGRESS.md
+GitManager.stage_submission()
+    ↓  allowlist-only · foreign-file detection
+GitManager.commit()
+    ↓  final safety check on staged content
+GitManager.push()           ← ALL of these checks run every time:
+    ↓  branch == main?      ✓
+    ↓  origin configured?   ✓
+    ↓  remote diverged?     ✓ (refuses non-fast-forward)
+    ↓  no force push        ✓
+github.com/rajwav/leetcode  🚀
 ```
 
 ---
 
-## 🔄 3. End-to-End Submission Data Flow
+## One-Time Setup
 
-When a problem is submitted on LeetCode, the automated pipeline follows these sequential stages:
+### 1. Install the Tampermonkey browser extension
 
-```mermaid
-sequenceDiagram
-    autonumber
-    participant LC as LeetCode Platform
-    participant Hook as Sync Engine / Webhook / Action
-    participant Store as Canonical Store (problems/)
-    participant Agg as Aggregate Ledger (README / PROGRESS)
-    participant Guides as Domain Indexes (patterns/ & DS)
+- [Chrome](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
 
-    LC->>Hook: Submission Accepted (AC)
-    Hook->>Hook: Parse problem ID, title, code, runtime, language
-    Hook->>Store: Create/Update problems/{difficulty}/{id}-{slug}/
-    Hook->>Store: Write solution code & problem README.md
-    Hook->>Agg: Update README.md metrics & recent solves table
-    Hook->>Agg: Update PROGRESS.md master ledger & category counts
-    Hook->>Guides: Append reference link to relevant patterns/ & data-structures/
-    Hook->>Agg: Check milestone thresholds (10, 50, 100, 250, 500, 1000)
-    Hook->>Hook: Commit changes safely (idempotent, non-destructive)
+### 2. Install the userscript
+
+Open Tampermonkey → Dashboard → New Script.
+Paste the entire contents of:
+
+```
+scripts/userscript/leetcode-lab-sync.user.js
+```
+
+Save. Tampermonkey will automatically inject it on `leetcode.com/problems/*`.
+
+### 3. Install the background server (LaunchAgent)
+
+```bash
+cd /Users/raj/Desktop/Leetcode
+./scripts/install_launchd.sh
+```
+
+That's it. The server starts immediately and will start automatically on every future login.
+
+---
+
+## Daily Workflow
+
+```
+Mac login
+    ↓ (automatic — no action needed)
+LeetCode Lab server starts on 127.0.0.1:8765
+
+Open https://leetcode.com
+    ↓
+Solve a problem
+    ↓
+Submit → Accepted
+    ↓ (automatic — no action needed)
+🟢 Toast: "LeetCode Lab synced — 0001-two-sum"
+
+problems/easy/0001-two-sum/
+├── solution.cpp     ← your code
+└── README.md        ← problem metadata
+
+README.md + PROGRESS.md updated
+    ↓
+Git commit: feat(problems): add 0001-two-sum [Easy] [cpp]
+    ↓
+git push origin main
+    ↓
+github.com/rajwav/leetcode 🚀
+```
+
+You never open a terminal. You never run a command. You only solve LeetCode.
+
+---
+
+## Troubleshooting
+
+### Check server status
+```bash
+./scripts/status_launchd.sh
+```
+
+### View live logs
+```bash
+# stdout (ingestion activity)
+tail -f ~/Library/Logs/LeetCodeLab/server.out
+
+# stderr (errors)
+tail -f ~/Library/Logs/LeetCodeLab/server.err
+```
+
+### Server not starting?
+```bash
+# Check launchd registration
+launchctl list | grep leetcode-lab
+
+# Check for port conflicts
+lsof -i :8765
+
+# Reinstall
+./scripts/uninstall_launchd.sh
+./scripts/install_launchd.sh
+```
+
+### Toast shows red 🔴 after Accepted submission
+The submission was captured but the server returned an error.
+Check the error log:
+```bash
+tail -50 ~/Library/Logs/LeetCodeLab/server.err
+```
+
+Common causes:
+- **Git safety error**: branch not `main`, or remote diverged — pull first
+- **Delimiter error**: README.md automation delimiters are corrupted — inspect the file
+- **Push failed**: GitHub authentication expired — re-authenticate `gh auth login`
+
+### Userscript not firing?
+1. Check Tampermonkey is enabled on `leetcode.com`
+2. Check the script is installed and enabled (green pill in Tampermonkey icon)
+3. Open browser DevTools Console, look for `[LeetCode Lab Bridge]` messages
+4. If needed, temporarily enable debug: find `DEBUG: false` in the script and set to `true`
+
+### Submission captured but not pushed?
+The local commit exists — the push safety check rejected it.
+Check the log:
+```bash
+grep "GitSafetyError\|push" ~/Library/Logs/LeetCodeLab/server.err | tail -20
+```
+
+The commit is safe on disk. To push manually:
+```bash
+git push origin main
 ```
 
 ---
 
-## ⚙️ 4. Pipeline Capability Specifications
+## Uninstall
 
-### 1. Ingestion & Problem Detection
-- Ingest accepted submissions via a dedicated sync engine (e.g. Custom GitHub Action, sync webhook, or browser-assisted integration).
-- Extract problem ID, slug, title, difficulty (`Easy`, `Medium`, `Hard`), submission runtime, memory, code, and language.
-
-### 2. Canonical Directory Resolution
-- Determine target directory based on difficulty: `problems/<difficulty>/<0000-slug>/`.
-- Sanitize slug to lowercase alphanumeric kebab-case.
-
-### 3. Source Code Ingestion
-- Save code with standard extensions (`solution.py`, `solution.cpp`, `solution.java`, `solution.go`, `solution.ts`, `solution.rs`).
-- If an existing solution in the same language exists, update only if the new submission has superior runtime/memory or marks a refactor.
-
-### 4. Problem Writeup & Metadata Generation
-- Generate problem `README.md` containing frontmatter metadata.
-- Pre-populate problem statement inside `<!-- AUTOMATION_PROBLEM_BODY_* -->` tags.
-- Maintain a dedicated manual section (`## 💡 Engineering Intuition`) that the pipeline **never overwrites** on subsequent syncs.
-
-### 5. Aggregate Statistics Recalculation
-- Parse all problem metadata across `problems/{easy,medium,hard}/`.
-- Calculate:
-  - Total solved count
-  - Difficulty distribution ($E / M / H$)
-  - Language distribution percentages
-  - Progress bar block updates (`░░░░░░░░░░`)
-- Update `README.md` between `<!-- AUTOMATION_METRICS_START -->` and `<!-- AUTOMATION_METRICS_END -->`.
-
-### 6. Recent Solves Stream Update
-- Maintain the 5 to 10 most recent solves sorted by `date_solved` descending.
-- Update `README.md` between `<!-- AUTOMATION_RECENT_SOLVES_START -->` and `<!-- AUTOMATION_RECENT_SOLVES_END -->`.
-
-### 7. Category & Topic Progress Calculation
-- Update category counts and percentages in `PROGRESS.md`.
-- Append entry to the master problem log in `PROGRESS.md` between `<!-- AUTOMATION_PROBLEM_LOG_START -->` and `<!-- AUTOMATION_PROBLEM_LOG_END -->`.
-
-### 8. Pattern & Data Structure Guide Indexing
-- If a problem specifies `primary_pattern: "Sliding Window"`, ensure a reference link exists in `patterns/sliding-window/README.md`.
-- No duplicate code files are created in the pattern directory.
-
-### 9. Milestone Evaluation
-- Evaluate solved count against milestones:
-  - $10, 50, 100, 250, 500, 1000$.
-- Automatically toggle `[ ]` to `[x]` in `README.md` when thresholds are crossed.
-
-### 10. Non-Destructive Update Guarantee
-- All automated edits **MUST** only replace text bounded by explicit delimiter comments.
-- User-written markdown notes, deep-dive explanations, custom diagrams, and learning entries outside these delimiters are preserved untouched.
-
----
-
-## 🔒 5. Automation Delimiters Contract
-
-The automation pipeline adheres strictly to the following delimiter conventions:
-
-```text
-README.md:
-  ├── <!-- AUTOMATION_METRICS_START --> ... <!-- AUTOMATION_METRICS_END -->
-  └── <!-- AUTOMATION_RECENT_SOLVES_START --> ... <!-- AUTOMATION_RECENT_SOLVES_END -->
-
-PROGRESS.md:
-  └── <!-- AUTOMATION_PROBLEM_LOG_START --> ... <!-- AUTOMATION_PROBLEM_LOG_END -->
-
-problems/<difficulty>/<id>-<slug>/README.md:
-  └── <!-- AUTOMATION_PROBLEM_BODY_START --> ... <!-- AUTOMATION_PROBLEM_BODY_END -->
+```bash
+./scripts/uninstall_launchd.sh
 ```
 
+This stops the server and removes the LaunchAgent. Your solutions, commits, and repository are untouched.
+
 ---
 
-## ⚠️ 6. Key Decisions & Architectural Considerations
+## Security Model
 
-Before deploying the live automation engine, the following decisions should be finalized:
+| Guarantee | How |
+| :--- | :--- |
+| Server listens on loopback only | `run_server()` enforces `127.0.0.1` — throws `ValueError` otherwise |
+| Origin allowlist | Only `leetcode.com` and `leetcode.cn` accepted |
+| No credentials in userscript | Userscript only POSTs to `127.0.0.1` — never to GitHub |
+| No force push | `GitManager.push()` never uses `--force` |
+| No unexpected staged files | `check_no_foreign_staged_files()` aborts if your work is staged |
+| Allowlist-only staging | Only `problems/`, `README.md`, `PROGRESS.md` can be staged |
+| Transactional dashboard | README.md + PROGRESS.md are backed up before write; restored on failure |
+| Concurrency | `_INGEST_LOCK` serializes concurrent browser tab submissions |
 
-1. **Sync Ingestion Mechanism**:
-   - *Option A (Direct LeetHub extension)*: Tends to write solutions directly to root or fixed folders; requires custom post-processing to conform to our `problems/<difficulty>/<0000-slug>/` structure.
-   - *Option B (Custom GitHub Action / Cron Sync)*: Fetches accepted submissions directly via LeetCode GraphQL API on a schedule or manual trigger, providing full control over directory placement and metadata parsing. *(Recommended)*
-   - *Option C (CLI Sync Tool)*: A local Python/TypeScript CLI tool run after practice sessions that pulls recent solves and updates the laboratory locally before pushing.
+---
 
-2. **Pattern & Data Structure Classification**:
-   - LeetCode's default tags are often broad (e.g. tagging almost everything as "Array").
-   - The pipeline can provide default tags extracted from LeetCode, but allow manual overrides in the problem's metadata frontmatter that persist across syncs.
+## File Reference
 
-3. **Multi-Language Strategy**:
-   - Multiple language solutions for the same problem will reside side-by-side in the same canonical folder (`solution.py`, `solution.cpp`, `solution.rs`), keeping discussions and complexity notes unified in a single `README.md`.
+| File | Purpose |
+| :--- | :--- |
+| `scripts/lab.py` | Main CLI: `listen`, `import`, `validate`, `stats`, `test` |
+| `scripts/server.py` | HTTP ingestion server |
+| `scripts/engine/validator.py` | Payload schema validation |
+| `scripts/engine/problem_manager.py` | Problem directory + README management |
+| `scripts/engine/statistics.py` | Dashboard statistics + updater |
+| `scripts/engine/git_manager.py` | Safe Git operations |
+| `scripts/userscript/leetcode-lab-sync.user.js` | Tampermonkey browser adapter |
+| `scripts/launchd/com.rajwav.leetcode-lab.plist.template` | LaunchAgent template |
+| `scripts/install_launchd.sh` | Install background server |
+| `scripts/uninstall_launchd.sh` | Uninstall background server |
+| `scripts/status_launchd.sh` | Check server status + logs |
+| `PROGRESS.md` | Auto-updated problem log and statistics |
+
+---
+
+*This system was designed to be a personal DSA operating system. You solve problems. The infrastructure handles everything else.*

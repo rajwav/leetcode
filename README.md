@@ -6,6 +6,18 @@ An archive of data structures and algorithms built from first principles. This r
 
 ---
 
+## ⚡ Quick Setup — Zero-Friction Automation
+
+```bash
+./scripts/install_launchd.sh
+```
+
+After that: **Mac login → solve on LeetCode → commit + push happens automatically.**
+
+Full documentation: [AUTOMATION.md](AUTOMATION.md)
+
+---
+
 ## 📊 DSA Progress Dashboard
 
 <!-- AUTOMATION_METRICS_START -->

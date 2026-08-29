@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  LeetCode Lab — macOS LaunchAgent
+  Label : com.rajwav.leetcode-lab
+  Managed by: scripts/install_launchd.sh / scripts/uninstall_launchd.sh
+
+  DO NOT edit the installed plist directly.
+  Edit this template and re-run install_launchd.sh.
+
+  Token substitution performed at install time:
+    __PYTHON__    -> absolute path to python3 interpreter
+    __REPO_ROOT__ -> absolute path to the repository root
+    __USER__      -> macOS username (for log path)
+-->
+<plist version="1.0">
+<dict>
+    <!-- Unique agent identifier -->
+    <key>Label</key>
+    <string>com.rajwav.leetcode-lab</string>
+
+    <!-- Command: python3 scripts/lab.py listen --push -->
+    <key>ProgramArguments</key>
+    <array>
+        <string>__PYTHON__</string>
+        <string>__REPO_ROOT__/scripts/lab.py</string>
+        <string>listen</string>
+        <string>--push</string>
+    </array>
+
+    <!-- Working directory must be the repo root for relative imports -->
+    <key>WorkingDirectory</key>
+    <string>__REPO_ROOT__</string>
+
+    <!-- Start immediately on login or launchctl bootstrap -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- Restart automatically if the process crashes or exits non-zero -->
+    <key>KeepAlive</key>
+    <true/>
+
+    <!-- Throttle rapid crash loops: wait 10s between restarts -->
+    <key>ThrottleInterval</key>
+    <integer>10</integer>
+
+    <!-- GUI session only — not SSH logins -->
+    <key>LimitLoadToSessionType</key>
+    <string>Aqua</string>
+
+    <!-- Background process: no terminal window -->
+    <key>ProcessType</key>
+    <string>Background</string>
+
+    <!-- Log paths — created automatically by launchd -->
+    <key>StandardOutPath</key>
+    <string>/Users/__USER__/Library/Logs/LeetCodeLab/server.out</string>
+
+    <key>StandardErrorPath</key>
+    <string>/Users/__USER__/Library/Logs/LeetCodeLab/server.err</string>
+
+    <!-- Minimal PATH that resolves git and python in a GUI session -->
+    <key>EnvironmentVariables</key>
+    <dict>
+        <key>PATH</key>
+        <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</string>
+        <key>HOME</key>
+        <string>/Users/__USER__</string>
+        <key>PYTHONDONTWRITEBYTECODE</key>
+        <string>1</string>
+    </dict>
+</dict>
+</plist>
