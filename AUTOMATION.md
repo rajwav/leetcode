@@ -62,7 +62,7 @@ Save. Tampermonkey will automatically inject it on `leetcode.com/problems/*`.
 ### 3. Install the background server (LaunchAgent)
 
 ```bash
-cd /Users/raj/Desktop/Leetcode
+cd /Users/raj/Projects/Leetcode
 ./scripts/install_launchd.sh
 ```
 
