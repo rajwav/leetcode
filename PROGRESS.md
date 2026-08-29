@@ -33,7 +33,7 @@ status: "Mastered"
 <!-- AUTOMATION_CATEGORY_TELEMETRY_START -->
 | Category | Solved | Target | Easy | Medium | Hard | Progress |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Arrays & Strings** | 0 | 35 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
+| **Arrays & Strings** | 1 | 35 | 1 | 0 | 0 | `░░░░░░░░░░` 2% |
 | **Linked Lists** | 0 | 15 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Stacks & Queues** | 0 | 20 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Trees & Binary Search Trees** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
@@ -51,6 +51,7 @@ status: "Mastered"
 | # | Problem Title | Difficulty | Primary Pattern | Data Structure | Time | Space | Canonical Solution | Review Status |
 | :-: | :--- | :---: | :--- | :--- | :-: | :-: | :---: | :---: |
 | 0009 | Palindrome Number | 🟢 Easy | — | Math | O(N) | O(1) | [`problems/easy/0009-palindrome-number/`](problems/easy/0009-palindrome-number/) | Solved |
+| 0014 | Longest Common Prefix | 🟢 Easy | — | Array, String | O(N) | O(1) | [`problems/easy/0014-longest-common-prefix/`](problems/easy/0014-longest-common-prefix/) | Solved |
 <!-- AUTOMATION_PROBLEM_LOG_END -->
 
 ---
