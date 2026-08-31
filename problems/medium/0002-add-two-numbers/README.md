@@ -12,9 +12,9 @@ leetcode_tags:
   - "Recursion"
 primary_pattern: ""
 solved_at: "2026-08-31"
-submission_id: "runcode_1788196989.5647335_v1idcsOxJH"
+submission_id: "2126404193"
 runtime: "0 ms"
-memory: "8.4 MB"
+memory: "77.2 MB"
 ---
 
 # 0002 — Add Two Numbers
@@ -28,7 +28,7 @@ memory: "8.4 MB"
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
 - **Runtime**: 0 ms
-- **Memory**: 8.4 MB
+- **Memory**: 77.2 MB
 - **Tags**: Linked List, Math, Recursion
 <!-- AUTOMATION_STATS_END -->
 
