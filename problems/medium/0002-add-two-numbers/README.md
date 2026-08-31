@@ -12,7 +12,7 @@ leetcode_tags:
   - "Recursion"
 primary_pattern: ""
 solved_at: "2026-08-31"
-submission_id: "2126404193"
+submission_id: "2126441963"
 runtime: "0 ms"
 memory: "77.2 MB"
 ---
