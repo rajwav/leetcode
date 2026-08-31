@@ -23,9 +23,9 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 <!-- AUTOMATION_METRICS_START -->
 | Metric | Solved | Distribution | Progress |
 | :--- | :---: | :--- | :--- |
-| **Total Solved** | **3** | `3 Easy` · `0 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 1% |
+| **Total Solved** | **4** | `3 Easy` · `1 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 1% |
 | 🟢 **Easy** | 3 | Foundational primitives & implementation | `█░░░░░░░░░░░░░░░░░░░` 3% |
-| 🟡 **Medium** | 0 | Core patterns, graphs & dynamic programming | `░░░░░░░░░░░░░░░░░░░░` 0% |
+| 🟡 **Medium** | 1 | Core patterns, graphs & dynamic programming | `░░░░░░░░░░░░░░░░░░░░` 0% |
 | 🔴 **Hard** | 0 | Complex optimization & multi-pattern synthesis | `░░░░░░░░░░░░░░░░░░░░` 0% |
 
 <br>
@@ -34,7 +34,7 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 | :--- | :---: | :--- |
 | **Current Streak** | `0 days` | Consistent daily problem-solving cycle |
 | **Longest Streak** | `0 days` | Peak deliberate practice consistency |
-| **Primary Languages** | `C++ (3)` | Standard technical interview & contest toolchains |
+| **Primary Languages** | `C++ (4)` | Standard technical interview & contest toolchains |
 | **Active Objective** | `Phase 1` | Core linear structures & two-pointer mechanics |
 <!-- AUTOMATION_METRICS_END -->
 
@@ -93,6 +93,7 @@ The laboratory follows a systematic 4-phase progression:
 <!-- AUTOMATION_RECENT_SOLVES_START -->
 | # | Problem | Difficulty | Category / Pattern | Solution | Date |
 | :-: | :--- | :---: | :--- | :---: | :---: |
+| 2 | [Add Two Numbers](problems/medium/0002-add-two-numbers/) | 🟡 Medium | Linked List | [`C++`](problems/medium/0002-add-two-numbers/) | 2026-08-31 |
 | 20 | [Valid Parentheses](problems/easy/0020-valid-parentheses/) | 🟢 Easy | String | [`C++`](problems/easy/0020-valid-parentheses/) | 2026-08-29 |
 | 14 | [Longest Common Prefix](problems/easy/0014-longest-common-prefix/) | 🟢 Easy | Array | [`C++`](problems/easy/0014-longest-common-prefix/) | 2026-08-29 |
 | 9 | [Palindrome Number](problems/easy/0009-palindrome-number/) | 🟢 Easy | Math | [`C++`](problems/easy/0009-palindrome-number/) | 2026-08-29 |
