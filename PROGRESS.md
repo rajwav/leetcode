@@ -33,7 +33,7 @@ status: "Mastered"
 <!-- AUTOMATION_CATEGORY_TELEMETRY_START -->
 | Category | Solved | Target | Easy | Medium | Hard | Progress |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Arrays & Strings** | 2 | 35 | 2 | 0 | 0 | `░░░░░░░░░░` 5% |
+| **Arrays & Strings** | 3 | 35 | 2 | 1 | 0 | `█░░░░░░░░░` 8% |
 | **Linked Lists** | 1 | 15 | 0 | 1 | 0 | `█░░░░░░░░░` 6% |
 | **Stacks & Queues** | 1 | 20 | 1 | 0 | 0 | `░░░░░░░░░░` 5% |
 | **Trees & Binary Search Trees** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
@@ -51,6 +51,7 @@ status: "Mastered"
 | # | Problem Title | Difficulty | Primary Pattern | Data Structure | Time | Space | Canonical Solution | Review Status |
 | :-: | :--- | :---: | :--- | :--- | :-: | :-: | :---: | :---: |
 | 0002 | Add Two Numbers | 🟡 Medium | — | Linked List, Math | O(N) | O(1) | [`problems/medium/0002-add-two-numbers/`](problems/medium/0002-add-two-numbers/) | Solved |
+| 0003 | Longest Substring Without Repeating Characters | 🟡 Medium | — | Hash Table, String | O(N) | O(1) | [`problems/medium/0003-longest-substring-without-repeating-characters/`](problems/medium/0003-longest-substring-without-repeating-characters/) | Solved |
 | 0009 | Palindrome Number | 🟢 Easy | — | Math | O(N) | O(1) | [`problems/easy/0009-palindrome-number/`](problems/easy/0009-palindrome-number/) | Solved |
 | 0014 | Longest Common Prefix | 🟢 Easy | — | Array, String | O(N) | O(1) | [`problems/easy/0014-longest-common-prefix/`](problems/easy/0014-longest-common-prefix/) | Solved |
 | 0020 | Valid Parentheses | 🟢 Easy | — | String, Stack | O(N) | O(1) | [`problems/easy/0020-valid-parentheses/`](problems/easy/0020-valid-parentheses/) | Solved |

@@ -23,9 +23,9 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 <!-- AUTOMATION_METRICS_START -->
 | Metric | Solved | Distribution | Progress |
 | :--- | :---: | :--- | :--- |
-| **Total Solved** | **4** | `3 Easy` · `1 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 1% |
+| **Total Solved** | **5** | `3 Easy` · `2 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 1% |
 | 🟢 **Easy** | 3 | Foundational primitives & implementation | `█░░░░░░░░░░░░░░░░░░░` 3% |
-| 🟡 **Medium** | 1 | Core patterns, graphs & dynamic programming | `░░░░░░░░░░░░░░░░░░░░` 0% |
+| 🟡 **Medium** | 2 | Core patterns, graphs & dynamic programming | `░░░░░░░░░░░░░░░░░░░░` 1% |
 | 🔴 **Hard** | 0 | Complex optimization & multi-pattern synthesis | `░░░░░░░░░░░░░░░░░░░░` 0% |
 
 <br>
@@ -34,7 +34,7 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 | :--- | :---: | :--- |
 | **Current Streak** | `0 days` | Consistent daily problem-solving cycle |
 | **Longest Streak** | `0 days` | Peak deliberate practice consistency |
-| **Primary Languages** | `C++ (4)` | Standard technical interview & contest toolchains |
+| **Primary Languages** | `C++ (5)` | Standard technical interview & contest toolchains |
 | **Active Objective** | `Phase 1` | Core linear structures & two-pointer mechanics |
 <!-- AUTOMATION_METRICS_END -->
 
@@ -93,6 +93,7 @@ The laboratory follows a systematic 4-phase progression:
 <!-- AUTOMATION_RECENT_SOLVES_START -->
 | # | Problem | Difficulty | Category / Pattern | Solution | Date |
 | :-: | :--- | :---: | :--- | :---: | :---: |
+| 3 | [Longest Substring Without Repeating Characters](problems/medium/0003-longest-substring-without-repeating-characters/) | 🟡 Medium | Hash Table | [`C++`](problems/medium/0003-longest-substring-without-repeating-characters/) | 2026-09-01 |
 | 2 | [Add Two Numbers](problems/medium/0002-add-two-numbers/) | 🟡 Medium | Linked List | [`C++`](problems/medium/0002-add-two-numbers/) | 2026-08-31 |
 | 20 | [Valid Parentheses](problems/easy/0020-valid-parentheses/) | 🟢 Easy | String | [`C++`](problems/easy/0020-valid-parentheses/) | 2026-08-29 |
 | 14 | [Longest Common Prefix](problems/easy/0014-longest-common-prefix/) | 🟢 Easy | Array | [`C++`](problems/easy/0014-longest-common-prefix/) | 2026-08-29 |
