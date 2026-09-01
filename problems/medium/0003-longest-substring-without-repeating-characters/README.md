@@ -12,8 +12,8 @@ leetcode_tags:
   - "Sliding Window"
 primary_pattern: ""
 solved_at: "2026-09-01"
-submission_id: "2127615771"
-runtime: "35 ms"
+submission_id: "2127616193"
+runtime: "46 ms"
 memory: "19.3 MB"
 ---
 
@@ -27,7 +27,7 @@ memory: "19.3 MB"
 
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
-- **Runtime**: 35 ms
+- **Runtime**: 46 ms
 - **Memory**: 19.3 MB
 - **Tags**: Hash Table, String, Sliding Window
 <!-- AUTOMATION_STATS_END -->
