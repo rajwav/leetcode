@@ -54,8 +54,18 @@ fi
 
 # ---- Detect Python ----------------------------------------------------------
 
-# Prefer the venv python3 if it's already on PATH (as set by shell profile)
-PYTHON_BIN="$(which python3 2>/dev/null || true)"
+# Prefer standard system/homebrew python3 over a temporary venv for the daemon
+if [[ -z "${PYTHON_BIN:-}" ]]; then
+    if [[ -x "/usr/local/bin/python3" ]]; then
+        PYTHON_BIN="/usr/local/bin/python3"
+    elif [[ -x "/opt/homebrew/bin/python3" ]]; then
+        PYTHON_BIN="/opt/homebrew/bin/python3"
+    elif [[ -x "/usr/bin/python3" ]]; then
+        PYTHON_BIN="/usr/bin/python3"
+    else
+        PYTHON_BIN="$(which python3 2>/dev/null || true)"
+    fi
+fi
 
 if [[ -z "${PYTHON_BIN}" ]]; then
     echo "[ERROR] python3 not found in PATH."
