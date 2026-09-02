@@ -34,13 +34,13 @@ status: "Mastered"
 | Category | Solved | Target | Easy | Medium | Hard | Progress |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Arrays & Strings** | 3 | 35 | 2 | 1 | 0 | `█░░░░░░░░░` 8% |
-| **Linked Lists** | 1 | 15 | 0 | 1 | 0 | `█░░░░░░░░░` 6% |
+| **Linked Lists** | 2 | 15 | 1 | 1 | 0 | `█░░░░░░░░░` 13% |
 | **Stacks & Queues** | 1 | 20 | 1 | 0 | 0 | `░░░░░░░░░░` 5% |
 | **Trees & Binary Search Trees** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Heaps & Priority Queues** | 0 | 15 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Graphs & Disjoint Sets** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
 | **Dynamic Programming** | 0 | 35 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
-| **Backtracking & Greedy** | 1 | 20 | 0 | 1 | 0 | `░░░░░░░░░░` 5% |
+| **Backtracking & Greedy** | 2 | 20 | 1 | 1 | 0 | `█░░░░░░░░░` 10% |
 <!-- AUTOMATION_CATEGORY_TELEMETRY_END -->
 
 ---
@@ -55,6 +55,7 @@ status: "Mastered"
 | 0009 | Palindrome Number | 🟢 Easy | — | Math | O(N) | O(1) | [`problems/easy/0009-palindrome-number/`](problems/easy/0009-palindrome-number/) | Solved |
 | 0014 | Longest Common Prefix | 🟢 Easy | — | Array, String | O(N) | O(1) | [`problems/easy/0014-longest-common-prefix/`](problems/easy/0014-longest-common-prefix/) | Solved |
 | 0020 | Valid Parentheses | 🟢 Easy | — | String, Stack | O(N) | O(1) | [`problems/easy/0020-valid-parentheses/`](problems/easy/0020-valid-parentheses/) | Solved |
+| 0021 | Merge Two Sorted Lists | 🟢 Easy | — | Linked List, Recursion | O(N) | O(1) | [`problems/easy/0021-merge-two-sorted-lists/`](problems/easy/0021-merge-two-sorted-lists/) | Solved |
 <!-- AUTOMATION_PROBLEM_LOG_END -->
 
 ---
