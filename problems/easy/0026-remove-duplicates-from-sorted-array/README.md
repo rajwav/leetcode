@@ -11,9 +11,9 @@ leetcode_tags:
   - "Two Pointers"
 primary_pattern: ""
 solved_at: "2026-09-05"
-submission_id: "runcode_1788613582.533902_YURVffOS4h"
+submission_id: "2131731107"
 runtime: "0 ms"
-memory: "8.2 MB"
+memory: "22.7 MB"
 ---
 
 # 0026 — Remove Duplicates from Sorted Array
@@ -27,7 +27,7 @@ memory: "8.2 MB"
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
 - **Runtime**: 0 ms
-- **Memory**: 8.2 MB
+- **Memory**: 22.7 MB
 - **Tags**: Array, Two Pointers
 <!-- AUTOMATION_STATS_END -->
 
