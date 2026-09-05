@@ -138,6 +138,16 @@ class ProblemManager:
             actions.append("create_readme")
             updated_readme_content = self._generate_new_readme(payload, all_languages)
 
+        # Apply Phase 2 Analyzer if README has empty placeholders
+        try:
+            from .analyzer import CodeAnalyzer
+            analyzer = CodeAnalyzer(payload.code, payload.leetcode_tags)
+            analysis = analyzer.analyze()
+            updated_readme_content = self._fill_placeholders(updated_readme_content, analysis)
+        except Exception as e:
+            import logging
+            logging.warning(f"Phase 2 Analyzer failed, skipping automated content: {e}")
+
         # Apply disk changes transactionally if not dry_run
         if not dry_run:
             orig_readme = readme_file.read_bytes() if readme_file.exists() else None
@@ -221,6 +231,55 @@ class ProblemManager:
                     langs.append(ext_to_lang[ext])
 
         return sorted(list(set(langs)))
+
+    def _fill_placeholders(self, readme: str, analysis: dict) -> str:
+        if analysis.get("intuition") and analysis.get("intuition") != "Analysis required":
+            readme = re.sub(
+                r'(## 💡 Engineering Intuition\n\n)<!-- Add personal intuition.*?-->',
+                r'\1' + analysis.get("intuition", ""),
+                readme,
+                flags=re.DOTALL
+            )
+            
+        if analysis.get("approach") and analysis.get("approach") != "Analysis required":
+            readme = re.sub(
+                r'(## ⚙️ Approach\n\n)<!-- Step-by-step.*?-->',
+                r'\1' + analysis.get("approach", ""),
+                readme,
+                flags=re.DOTALL
+            )
+            
+        if analysis.get("edge_cases") and analysis.get("edge_cases") != "Analysis required":
+            readme = re.sub(
+                r'(## 🧪 Edge Cases\n\n)- Empty / single-element collections\n- Boundary conditions & negative numbers\n- Duplicates & overflow constraints',
+                r'\1' + analysis.get("edge_cases", ""),
+                readme,
+                flags=re.DOTALL
+            )
+
+        if analysis.get("lessons") and analysis.get("lessons") != "Analysis required":
+            readme = re.sub(
+                r'(## 📝 Lessons Learned\n\n)<!-- Personal retrospectives.*?-->',
+                r'\1' + analysis.get("lessons", ""),
+                readme,
+                flags=re.DOTALL
+            )
+
+        if analysis.get("time_complexity") and analysis.get("time_complexity") != "Analysis required":
+            readme = re.sub(
+                r'- \*\*Time Complexity\*\*: \$O\(\\dots\)\$',
+                f"- **Time Complexity**: {analysis['time_complexity']}",
+                readme
+            )
+            
+        if analysis.get("space_complexity") and analysis.get("space_complexity") != "Analysis required":
+            readme = re.sub(
+                r'- \*\*Space Complexity\*\*: \$O\(\\dots\)\$',
+                f"- **Space Complexity**: {analysis['space_complexity']}",
+                readme
+            )
+            
+        return readme
 
     def _generate_new_readme(
         self,
