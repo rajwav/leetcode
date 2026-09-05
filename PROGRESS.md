@@ -33,7 +33,7 @@ status: "Mastered"
 <!-- AUTOMATION_CATEGORY_TELEMETRY_START -->
 | Category | Solved | Target | Easy | Medium | Hard | Progress |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Arrays & Strings** | 3 | 35 | 2 | 1 | 0 | `█░░░░░░░░░` 8% |
+| **Arrays & Strings** | 4 | 35 | 2 | 2 | 0 | `█░░░░░░░░░` 11% |
 | **Linked Lists** | 2 | 15 | 1 | 1 | 0 | `█░░░░░░░░░` 13% |
 | **Stacks & Queues** | 1 | 20 | 1 | 0 | 0 | `░░░░░░░░░░` 5% |
 | **Trees & Binary Search Trees** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
@@ -56,6 +56,7 @@ status: "Mastered"
 | 0014 | Longest Common Prefix | 🟢 Easy | — | Array, String | O(N) | O(1) | [`problems/easy/0014-longest-common-prefix/`](problems/easy/0014-longest-common-prefix/) | Solved |
 | 0020 | Valid Parentheses | 🟢 Easy | — | String, Stack | O(N) | O(1) | [`problems/easy/0020-valid-parentheses/`](problems/easy/0020-valid-parentheses/) | Solved |
 | 0021 | Merge Two Sorted Lists | 🟢 Easy | — | Linked List, Recursion | O(N) | O(1) | [`problems/easy/0021-merge-two-sorted-lists/`](problems/easy/0021-merge-two-sorted-lists/) | Solved |
+| 0167 | Two Sum II - Input Array Is Sorted | 🟡 Medium | — | Array, Two Pointers | O(N) | O(1) | [`problems/medium/0167-two-sum-ii-input-array-is-sorted/`](problems/medium/0167-two-sum-ii-input-array-is-sorted/) | Solved |
 <!-- AUTOMATION_PROBLEM_LOG_END -->
 
 ---
