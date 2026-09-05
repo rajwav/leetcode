@@ -30,10 +30,6 @@ BODY_START_TAG = "<!-- AUTOMATION_PROBLEM_BODY_START -->"
 BODY_END_TAG = "<!-- AUTOMATION_PROBLEM_BODY_END -->"
 
 
-class SolutionConflictError(Exception):
-    """Raised when an incoming solution differs from an existing solution in the same language."""
-    pass
-
 
 @dataclass
 class ImportResult:
@@ -88,6 +84,9 @@ class ProblemManager:
         if is_new_problem:
             actions.append(f"create_directory:{target_dir.name}")
 
+        alt_file_to_write = None
+        alt_filename = None
+
         # Check solution file
         if solution_file.exists():
             existing_code = solution_file.read_text(encoding="utf-8").strip()
@@ -95,11 +94,33 @@ class ProblemManager:
             if existing_code == new_code:
                 actions.append(f"identical_solution:{solution_filename}")
             else:
-                raise SolutionConflictError(
-                    f"Solution conflict for #{payload.problem_id} in {payload.language}: "
-                    f"A different solution already exists at {solution_file.relative_to(self.repo_root)}. "
-                    "Existing solution is preserved. Manual review required."
-                )
+                # We have a different solution. Preserve the old one in alternatives/
+                old_sub_id = "unknown"
+                if readme_file.exists():
+                    fm_match = re.search(r'^submission_id:\s*["\']?(.*?)["\']?\s*$', readme_file.read_text(encoding="utf-8"), re.MULTILINE)
+                    if fm_match:
+                        old_sub_id = fm_match.group(1).strip()
+                
+                safe_old_id = "".join(c for c in old_sub_id if c.isalnum()) or "unknown"
+                alt_dir = target_dir / "alternatives"
+                
+                # Collision handling
+                base_alt_name = f"solution_{safe_old_id}"
+                alt_filename = f"{base_alt_name}.{payload.extension}"
+                alt_file = alt_dir / alt_filename
+                
+                counter = 1
+                while alt_file.exists():
+                    if alt_file.read_text(encoding="utf-8").strip() == existing_code:
+                        break # It's exactly the same old code already backed up
+                    alt_filename = f"{base_alt_name}_{counter}.{payload.extension}"
+                    alt_file = alt_dir / alt_filename
+                    counter += 1
+                    
+                alt_file_to_write = alt_file
+                
+                actions.append(f"preserve_alternative:{alt_filename}")
+                actions.append(f"update_solution:{solution_filename}")
         else:
             is_new_language = not is_new_problem
             actions.append(f"create_solution:{solution_filename}")
@@ -117,12 +138,54 @@ class ProblemManager:
             actions.append("create_readme")
             updated_readme_content = self._generate_new_readme(payload, all_languages)
 
-        # Apply disk changes if not dry_run
+        # Apply disk changes transactionally if not dry_run
         if not dry_run:
-            target_dir.mkdir(parents=True, exist_ok=True)
-            if not solution_file.exists():
-                solution_file.write_text(payload.code.strip() + "\n", encoding="utf-8")
-            readme_file.write_text(updated_readme_content, encoding="utf-8")
+            orig_readme = readme_file.read_bytes() if readme_file.exists() else None
+            orig_solution = solution_file.read_bytes() if solution_file.exists() else None
+            
+            created_dirs = []
+            created_files = []
+            
+            try:
+                if not target_dir.exists():
+                    target_dir.mkdir(parents=True, exist_ok=True)
+                    created_dirs.append(target_dir)
+                    
+                # Step 1: Copy existing solution to alternatives if needed
+                if alt_file_to_write:
+                    if not alt_file_to_write.parent.exists():
+                        alt_file_to_write.parent.mkdir(parents=True, exist_ok=True)
+                        created_dirs.append(alt_file_to_write.parent)
+                        
+                    if not alt_file_to_write.exists():
+                        created_files.append(alt_file_to_write)
+                    import shutil
+                    shutil.copy2(solution_file, alt_file_to_write)
+                    
+                # Step 2: Write new solution if not identical
+                if "identical_solution:" not in "".join(actions):
+                    if not solution_file.exists():
+                        created_files.append(solution_file)
+                    solution_file.write_text(payload.code.strip() + "\n", encoding="utf-8")
+                    
+                # Step 3: Update README
+                if not readme_file.exists():
+                    created_files.append(readme_file)
+                readme_file.write_text(updated_readme_content, encoding="utf-8")
+                
+            except Exception as e:
+                # Rollback
+                for f in reversed(created_files):
+                    if f.exists():
+                        f.unlink()
+                if orig_readme is not None:
+                    readme_file.write_bytes(orig_readme)
+                if orig_solution is not None:
+                    solution_file.write_bytes(orig_solution)
+                for d in reversed(created_dirs):
+                    if d.exists() and not any(d.iterdir()):
+                        d.rmdir()
+                raise e # Re-raise to let the caller handle it (500)
 
         return ImportResult(
             problem_dir=target_dir,

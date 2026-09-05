@@ -17,7 +17,7 @@ import threading
 from typing import Any, Dict, List, Optional, Set, Tuple
 
 from .engine.validator import SubmissionPayload, ValidationError, validate_submission
-from .engine.problem_manager import ProblemManager, SolutionConflictError
+from .engine.problem_manager import ProblemManager
 from .engine.ledger_updater import DelimiterError
 from .engine.statistics import DashboardUpdater
 from .engine.git_manager import GitManager, GitSafetyError
@@ -270,10 +270,6 @@ class IngestionRequestHandler(BaseHTTPRequestHandler):
                 resp_data["commit"] = commit_msg
 
             self._send_json_response(200, resp_data, origin=origin)
-
-        except SolutionConflictError as e:
-            # Conflict is surfaced as-is; no dashboard was written yet so no rollback needed
-            self._send_json_response(409, {"ok": False, "error": str(e)}, origin=origin)
 
         except (DelimiterError, GitSafetyError, Exception) as e:
             # Restore dashboard files to pre-ingest state ONLY if we haven't committed yet.

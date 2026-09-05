@@ -17,7 +17,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.engine.validator import SubmissionPayload, ValidationError, validate_submission
-from scripts.engine.problem_manager import ProblemManager, SolutionConflictError, DelimiterError
+from scripts.engine.problem_manager import ProblemManager, DelimiterError
 from scripts.engine.statistics import RepositoryScanner, DashboardUpdater
 from scripts.engine.git_manager import GitManager, GitSafetyError
 
@@ -146,9 +146,7 @@ def cmd_import(args: argparse.Namespace) -> None:
                         git_mgr.push()
                         print("   • Git Push:   Pushed to origin/main")
 
-    except SolutionConflictError as e:
-        print(f"⚠️ Conflict Error: {e}", file=sys.stderr)
-        sys.exit(1)
+
     except DelimiterError as e:
         print(f"❌ Delimiter Error: {e}", file=sys.stderr)
         sys.exit(1)

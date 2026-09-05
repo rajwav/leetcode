@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 
 from scripts.engine.ledger_updater import DelimiterError
-from scripts.engine.problem_manager import ProblemManager, SolutionConflictError
+from scripts.engine.problem_manager import ProblemManager
 from scripts.engine.validator import validate_submission
 
 
@@ -135,10 +135,12 @@ class TestProblemManager(unittest.TestCase):
         self.assertIn("identical_solution:solution.cpp", res2.actions)
         self.assertEqual(readme1, readme2)
 
-    # I: Solution conflict detection on different code
-    def test_solution_conflict_raises_error(self):
+    # I: Versioned file creation on different code (Alternatives architecture)
+    def test_different_solution_creates_alternative(self):
+        # 1. Initial submission
         self.problem_manager.import_submission(self.two_sum_cpp)
 
+        # 2. Conflicting submission
         conflicting_submission = validate_submission({
             "submission_id": "9999",
             "problem_id": 1,
@@ -150,13 +152,55 @@ class TestProblemManager(unittest.TestCase):
             "status": "Accepted",
         })
 
-        with self.assertRaises(SolutionConflictError) as ctx:
-            self.problem_manager.import_submission(conflicting_submission)
-        self.assertIn("Solution conflict", str(ctx.exception))
+        res = self.problem_manager.import_submission(conflicting_submission)
+        
+        self.assertIn("update_solution:solution.cpp", res.actions)
+        self.assertIn("preserve_alternative:solution_1001.cpp", res.actions)
 
-        # Existing code must be completely untouched
+        # The NEW code must be in solution.cpp (canonical)
         sol_file = self.repo_root / "problems" / "easy" / "0001-two-sum" / "solution.cpp"
-        self.assertIn("vector<int> twoSum", sol_file.read_text(encoding="utf-8"))
+        self.assertIn("// Completely different implementation", sol_file.read_text(encoding="utf-8"))
+
+        # The OLD code must be in alternatives/solution_1001.cpp
+        alt_sol_file = self.repo_root / "problems" / "easy" / "0001-two-sum" / "alternatives" / "solution_1001.cpp"
+        self.assertTrue(alt_sol_file.exists())
+        self.assertIn("vector<int> twoSum", alt_sol_file.read_text(encoding="utf-8"))
+        
+        # 3. Duplicate submission ID testing
+        conflicting_submission_update = validate_submission({
+            "submission_id": "9999",
+            "problem_id": 1,
+            "slug": "two-sum",
+            "title": "Two Sum",
+            "difficulty": "Easy",
+            "language": "cpp",
+            "code": "// Completely different implementation v2\nclass Solution { ... };",
+            "status": "Accepted",
+        })
+        res2 = self.problem_manager.import_submission(conflicting_submission_update)
+        self.assertIn("update_solution:solution.cpp", res2.actions)
+        self.assertIn("preserve_alternative:solution_9999.cpp", res2.actions)
+        
+        sol_file2 = self.repo_root / "problems" / "easy" / "0001-two-sum" / "solution.cpp"
+        self.assertIn("v2", sol_file2.read_text(encoding="utf-8"))
+        
+        alt_sol_file2 = self.repo_root / "problems" / "easy" / "0001-two-sum" / "alternatives" / "solution_9999.cpp"
+        self.assertTrue(alt_sol_file2.exists())
+        self.assertIn("// Completely different implementation\nclass Solution", alt_sol_file2.read_text(encoding="utf-8"))
+        
+        # Test directory traversal safety
+        with self.assertRaises(Exception) as ctx:
+            validate_submission({
+                "submission_id": "../../../9999",
+                "problem_id": 1,
+                "slug": "two-sum",
+                "title": "Two Sum",
+                "difficulty": "Easy",
+                "language": "cpp",
+                "code": "// Evil code",
+                "status": "Accepted",
+            })
+        self.assertTrue("Invalid 'submission_id'" in str(ctx.exception) or "ValidationError" in str(type(ctx.exception)))
 
     # J, K, L: Manual content preservation
     def test_manual_sections_preservation(self):
