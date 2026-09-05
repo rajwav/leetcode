@@ -1,6 +1,6 @@
 class Solution {
 public:
-    vector<int> twoSum(vector<int>& a, int target) {
+    vector<int> teosum(vector<int>& a, int target) {
         int i = 0;
         int j = a.size() - 1;
 

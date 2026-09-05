@@ -12,9 +12,9 @@ leetcode_tags:
   - "Binary Search"
 primary_pattern: ""
 solved_at: "2026-09-05"
-submission_id: "runcode_1788593985.777843_n6cvE1Q8jR"
+submission_id: "2131573667"
 runtime: "0 ms"
-memory: "8.5 MB"
+memory: "19.6 MB"
 ---
 
 # 0167 — Two Sum II - Input Array Is Sorted
@@ -28,7 +28,7 @@ memory: "8.5 MB"
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
 - **Runtime**: 0 ms
-- **Memory**: 8.5 MB
+- **Memory**: 19.6 MB
 - **Tags**: Array, Two Pointers, Binary Search
 <!-- AUTOMATION_STATS_END -->
 
@@ -39,23 +39,21 @@ memory: "8.5 MB"
 
 ## 💡 Engineering Intuition
 
-<!-- Add personal intuition, key invariants, and pattern recognition triggers here -->
+By moving pointers from opposite ends or in tandem, we avoid checking every O(N^2) combination.
 
 ## ⚙️ Approach
 
-<!-- Step-by-step algorithmic approach and state transitions -->
+Uses Two Pointers to systematically eliminate possibilities.
 
 ## 🧪 Edge Cases
 
-- Empty / single-element collections
-- Boundary conditions & negative numbers
-- Duplicates & overflow constraints
+- Empty data structures (`n == 0`)
 
 ## 📊 Complexity Analysis
 
-- **Time Complexity**: $O(\dots)$
-- **Space Complexity**: $O(\dots)$
+- **Time Complexity**: O(N) - Linear Scan
+- **Space Complexity**: O(1) - Constant Space
 
 ## 📝 Lessons Learned
 
-<!-- Personal retrospectives, anti-patterns avoided, or debugging notes -->
+Key takeaway: Two pointers optimally navigate bounded monotonic sequences without O(N^2) pairs.
