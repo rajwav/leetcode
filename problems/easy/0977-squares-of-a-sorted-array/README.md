@@ -12,8 +12,8 @@ leetcode_tags:
   - "Sorting"
 primary_pattern: ""
 solved_at: "2026-09-10"
-submission_id: "2137726367"
-runtime: "3 ms"
+submission_id: "2137734306"
+runtime: "0 ms"
 memory: "30.3 MB"
 ---
 
@@ -27,7 +27,7 @@ memory: "30.3 MB"
 
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
-- **Runtime**: 3 ms
+- **Runtime**: 0 ms
 - **Memory**: 30.3 MB
 - **Tags**: Array, Two Pointers, Sorting
 <!-- AUTOMATION_STATS_END -->
