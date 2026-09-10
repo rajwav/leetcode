@@ -12,9 +12,9 @@ leetcode_tags:
   - "Sorting"
 primary_pattern: ""
 solved_at: "2026-09-10"
-submission_id: "runcode_1789058646.0357647_FCYLUIoQsH"
-runtime: "0 ms"
-memory: "8.2 MB"
+submission_id: "2137726367"
+runtime: "3 ms"
+memory: "30.3 MB"
 ---
 
 # 0977 — Squares of a Sorted Array
@@ -27,8 +27,8 @@ memory: "8.2 MB"
 
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
-- **Runtime**: 0 ms
-- **Memory**: 8.2 MB
+- **Runtime**: 3 ms
+- **Memory**: 30.3 MB
 - **Tags**: Array, Two Pointers, Sorting
 <!-- AUTOMATION_STATS_END -->
 
