@@ -33,7 +33,7 @@ status: "Mastered"
 <!-- AUTOMATION_CATEGORY_TELEMETRY_START -->
 | Category | Solved | Target | Easy | Medium | Hard | Progress |
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
-| **Arrays & Strings** | 5 | 35 | 3 | 2 | 0 | `█░░░░░░░░░` 14% |
+| **Arrays & Strings** | 6 | 35 | 4 | 2 | 0 | `██░░░░░░░░` 17% |
 | **Linked Lists** | 2 | 15 | 1 | 1 | 0 | `█░░░░░░░░░` 13% |
 | **Stacks & Queues** | 1 | 20 | 1 | 0 | 0 | `░░░░░░░░░░` 5% |
 | **Trees & Binary Search Trees** | 0 | 25 | 0 | 0 | 0 | `░░░░░░░░░░` 0% |
@@ -58,6 +58,7 @@ status: "Mastered"
 | 0021 | Merge Two Sorted Lists | 🟢 Easy | — | Linked List, Recursion | O(N) | O(1) | [`problems/easy/0021-merge-two-sorted-lists/`](problems/easy/0021-merge-two-sorted-lists/) | Solved |
 | 0026 | Remove Duplicates from Sorted Array | 🟢 Easy | — | Array, Two Pointers | O(N) | O(1) | [`problems/easy/0026-remove-duplicates-from-sorted-array/`](problems/easy/0026-remove-duplicates-from-sorted-array/) | Solved |
 | 0167 | Two Sum II - Input Array Is Sorted | 🟡 Medium | — | Array, Two Pointers | O(N) | O(1) | [`problems/medium/0167-two-sum-ii-input-array-is-sorted/`](problems/medium/0167-two-sum-ii-input-array-is-sorted/) | Solved |
+| 0977 | Squares of a Sorted Array | 🟢 Easy | — | Array, Two Pointers | O(N) | O(1) | [`problems/easy/0977-squares-of-a-sorted-array/`](problems/easy/0977-squares-of-a-sorted-array/) | Solved |
 <!-- AUTOMATION_PROBLEM_LOG_END -->
 
 ---

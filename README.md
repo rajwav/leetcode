@@ -23,8 +23,8 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 <!-- AUTOMATION_METRICS_START -->
 | Metric | Solved | Distribution | Progress |
 | :--- | :---: | :--- | :--- |
-| **Total Solved** | **8** | `5 Easy` · `3 Medium` · `0 Hard` | `░░░░░░░░░░░░░░░░░░░░` 2% |
-| 🟢 **Easy** | 5 | Foundational primitives & implementation | `█░░░░░░░░░░░░░░░░░░░` 5% |
+| **Total Solved** | **9** | `6 Easy` · `3 Medium` · `0 Hard` | `█░░░░░░░░░░░░░░░░░░░` 3% |
+| 🟢 **Easy** | 6 | Foundational primitives & implementation | `█░░░░░░░░░░░░░░░░░░░` 6% |
 | 🟡 **Medium** | 3 | Core patterns, graphs & dynamic programming | `░░░░░░░░░░░░░░░░░░░░` 2% |
 | 🔴 **Hard** | 0 | Complex optimization & multi-pattern synthesis | `░░░░░░░░░░░░░░░░░░░░` 0% |
 
@@ -34,7 +34,7 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 | :--- | :---: | :--- |
 | **Current Streak** | `0 days` | Consistent daily problem-solving cycle |
 | **Longest Streak** | `0 days` | Peak deliberate practice consistency |
-| **Primary Languages** | `C++ (8)` | Standard technical interview & contest toolchains |
+| **Primary Languages** | `C++ (9)` | Standard technical interview & contest toolchains |
 | **Active Objective** | `Phase 1` | Core linear structures & two-pointer mechanics |
 <!-- AUTOMATION_METRICS_END -->
 
@@ -93,6 +93,7 @@ The laboratory follows a systematic 4-phase progression:
 <!-- AUTOMATION_RECENT_SOLVES_START -->
 | # | Problem | Difficulty | Category / Pattern | Solution | Date |
 | :-: | :--- | :---: | :--- | :---: | :---: |
+| 977 | [Squares of a Sorted Array](problems/easy/0977-squares-of-a-sorted-array/) | 🟢 Easy | Array | [`C++`](problems/easy/0977-squares-of-a-sorted-array/) | 2026-09-10 |
 | 167 | [Two Sum II - Input Array Is Sorted](problems/medium/0167-two-sum-ii-input-array-is-sorted/) | 🟡 Medium | Array | [`C++`](problems/medium/0167-two-sum-ii-input-array-is-sorted/) | 2026-09-05 |
 | 26 | [Remove Duplicates from Sorted Array](problems/easy/0026-remove-duplicates-from-sorted-array/) | 🟢 Easy | Array | [`C++`](problems/easy/0026-remove-duplicates-from-sorted-array/) | 2026-09-05 |
 | 21 | [Merge Two Sorted Lists](problems/easy/0021-merge-two-sorted-lists/) | 🟢 Easy | Linked List | [`C++`](problems/easy/0021-merge-two-sorted-lists/) | 2026-09-02 |
