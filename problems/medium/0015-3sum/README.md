@@ -12,9 +12,9 @@ leetcode_tags:
   - "Sorting"
 primary_pattern: ""
 solved_at: "2026-09-14"
-submission_id: "runcode_1789366560.7309043_aKA9NvovoM"
-runtime: "0 ms"
-memory: "8.4 MB"
+submission_id: "2141258619"
+runtime: "47 ms"
+memory: "29.1 MB"
 ---
 
 # 0015 — 3Sum
@@ -27,8 +27,8 @@ memory: "8.4 MB"
 
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
-- **Runtime**: 0 ms
-- **Memory**: 8.4 MB
+- **Runtime**: 47 ms
+- **Memory**: 29.1 MB
 - **Tags**: Array, Two Pointers, Sorting
 <!-- AUTOMATION_STATS_END -->
 
