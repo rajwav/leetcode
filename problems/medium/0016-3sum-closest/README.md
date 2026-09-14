@@ -12,9 +12,9 @@ leetcode_tags:
   - "Sorting"
 primary_pattern: ""
 solved_at: "2026-09-14"
-submission_id: "runcode_1789368470.5657313_0Tdf2El30t"
-runtime: "0 ms"
-memory: "8.3 MB"
+submission_id: "2141285931"
+runtime: "15 ms"
+memory: "14.2 MB"
 ---
 
 # 0016 — 3Sum Closest
@@ -27,8 +27,8 @@ memory: "8.3 MB"
 
 <!-- AUTOMATION_STATS_START -->
 - **Languages**: C++
-- **Runtime**: 0 ms
-- **Memory**: 8.3 MB
+- **Runtime**: 15 ms
+- **Memory**: 14.2 MB
 - **Tags**: Array, Two Pointers, Sorting
 <!-- AUTOMATION_STATS_END -->
 
