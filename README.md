@@ -23,9 +23,9 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 <!-- AUTOMATION_METRICS_START -->
 | Metric | Solved | Distribution | Progress |
 | :--- | :---: | :--- | :--- |
-| **Total Solved** | **11** | `6 Easy` · `5 Medium` · `0 Hard` | `█░░░░░░░░░░░░░░░░░░░` 3% |
+| **Total Solved** | **12** | `6 Easy` · `6 Medium` · `0 Hard` | `█░░░░░░░░░░░░░░░░░░░` 4% |
 | 🟢 **Easy** | 6 | Foundational primitives & implementation | `█░░░░░░░░░░░░░░░░░░░` 6% |
-| 🟡 **Medium** | 5 | Core patterns, graphs & dynamic programming | `█░░░░░░░░░░░░░░░░░░░` 3% |
+| 🟡 **Medium** | 6 | Core patterns, graphs & dynamic programming | `█░░░░░░░░░░░░░░░░░░░` 4% |
 | 🔴 **Hard** | 0 | Complex optimization & multi-pattern synthesis | `░░░░░░░░░░░░░░░░░░░░` 0% |
 
 <br>
@@ -34,7 +34,7 @@ Full documentation: [AUTOMATION.md](AUTOMATION.md)
 | :--- | :---: | :--- |
 | **Current Streak** | `0 days` | Consistent daily problem-solving cycle |
 | **Longest Streak** | `0 days` | Peak deliberate practice consistency |
-| **Primary Languages** | `C++ (11)` | Standard technical interview & contest toolchains |
+| **Primary Languages** | `C++ (11)` · `Python (1)` | Standard technical interview & contest toolchains |
 | **Active Objective** | `Phase 1` | Core linear structures & two-pointer mechanics |
 <!-- AUTOMATION_METRICS_END -->
 
@@ -93,6 +93,7 @@ The laboratory follows a systematic 4-phase progression:
 <!-- AUTOMATION_RECENT_SOLVES_START -->
 | # | Problem | Difficulty | Category / Pattern | Solution | Date |
 | :-: | :--- | :---: | :--- | :---: | :---: |
+| 468 | [Validate IP Address](problems/medium/0468-validate-ip-address/) | 🟡 Medium | String | [`Python`](problems/medium/0468-validate-ip-address/) | 2026-09-15 |
 | 16 | [3Sum Closest](problems/medium/0016-3sum-closest/) | 🟡 Medium | Array | [`C++`](problems/medium/0016-3sum-closest/) | 2026-09-14 |
 | 15 | [3Sum](problems/medium/0015-3sum/) | 🟡 Medium | Array | [`C++`](problems/medium/0015-3sum/) | 2026-09-14 |
 | 977 | [Squares of a Sorted Array](problems/easy/0977-squares-of-a-sorted-array/) | 🟢 Easy | Array | [`C++`](problems/easy/0977-squares-of-a-sorted-array/) | 2026-09-10 |
@@ -102,7 +103,6 @@ The laboratory follows a systematic 4-phase progression:
 | 3 | [Longest Substring Without Repeating Characters](problems/medium/0003-longest-substring-without-repeating-characters/) | 🟡 Medium | Hash Table | [`C++`](problems/medium/0003-longest-substring-without-repeating-characters/) | 2026-09-01 |
 | 2 | [Add Two Numbers](problems/medium/0002-add-two-numbers/) | 🟡 Medium | Linked List | [`C++`](problems/medium/0002-add-two-numbers/) | 2026-08-31 |
 | 20 | [Valid Parentheses](problems/easy/0020-valid-parentheses/) | 🟢 Easy | String | [`C++`](problems/easy/0020-valid-parentheses/) | 2026-08-29 |
-| 14 | [Longest Common Prefix](problems/easy/0014-longest-common-prefix/) | 🟢 Easy | Array | [`C++`](problems/easy/0014-longest-common-prefix/) | 2026-08-29 |
 <!-- AUTOMATION_RECENT_SOLVES_END -->
 
 ---
